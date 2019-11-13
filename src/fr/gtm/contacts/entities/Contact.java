@@ -35,7 +35,7 @@ public class Contact implements Serializable {
 	private Civilite civilite;
 	private String nom;
 	private String prenom;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@ElementCollection
 	@JoinTable(name = "contacts_adresses", joinColumns = @JoinColumn(name = "fk_personne"), inverseJoinColumns = @JoinColumn(name = "fk_adresse"))
 	private Set<Adresse> adresses = new HashSet<>();

@@ -1,6 +1,8 @@
 package fr.gtm.contacts.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -13,6 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import fr.gtm.contacts.dao.ContactDAO;
+import fr.gtm.contacts.dto.ContactDTO;
+import fr.gtm.contacts.entities.Adresse;
 import fr.gtm.contacts.entities.Civilite;
 import fr.gtm.contacts.entities.Contact;
 
@@ -23,8 +27,10 @@ public class ContactsService {
 @POST
 @Path("/add")
 @Consumes(MediaType.APPLICATION_JSON)
-public void create(Contact contact) {
+public ContactDTO create(Contact contact) {
 	dao.create(contact);
+	ContactDTO cdto = new ContactDTO(contact);
+	return cdto;
 	}
 
 @DELETE
@@ -47,9 +53,29 @@ public List<Contact> getContactByCivilite(Civilite civilite){
 @GET
 @Path("/all")
 @Produces(MediaType.APPLICATION_JSON)
-public List<Contact> getAllContact(){
-	return dao.getAllContact();
+public List<ContactDTO> getAllContact(){
+	List<ContactDTO> dtos = new ArrayList<ContactDTO>();
+	List<Contact> contacts = dao.getAllContact();
+	for(Contact c : contacts) {
+		dtos.add(new ContactDTO(c));
 	}
+	return dtos;
+	}
+
+@GET
+@Path("/get/{id}")
+@Produces(MediaType.APPLICATION_JSON)
+public ContactDTO getContactById(@PathParam("id")long id) {
+	ContactDTO cdto = new ContactDTO(dao.getContactById(id));
+	return cdto;	
+}
+
+@GET
+@Path("/adresses/{id}")
+@Produces(MediaType.APPLICATION_JSON)
+public List<Adresse> getAdresseByContactId(@PathParam("id")long id){
+	return dao.getAdressesByContactId(id);
+}
 
 public List<Contact> getContactByNom(String nom){
 	return dao.getContactByNom(nom);
@@ -58,4 +84,6 @@ public List<Contact> getContactByNom(String nom){
 public List<Contact> getContactByAdresseNotNull(){
 	return dao.getContactByAdresseNotNull();
 	}
+
+
 }

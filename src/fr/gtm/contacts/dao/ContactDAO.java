@@ -1,11 +1,14 @@
 package fr.gtm.contacts.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import fr.gtm.contacts.entities.Adresse;
 import fr.gtm.contacts.entities.Civilite;
 import fr.gtm.contacts.entities.Contact;
 
@@ -26,7 +29,6 @@ public class ContactDAO {
 	public void delete(Contact contact) {
 		Contact c1 = em.find(Contact.class, contact.getId());
 		em.remove(c1);
-
 	}
 	
 	public void update(Contact contact) {
@@ -55,6 +57,14 @@ public class ContactDAO {
 		List<Contact> contacts = em.createNamedQuery("Contact.getAdresseNotEmpty", Contact.class).getResultList();
 		return contacts;
 	}
-
+	
+	public List<Adresse> getAdressesByContactId(long id) {
+		Contact contact = em.find(Contact.class, id);
+		List<Adresse> adresses = new ArrayList<Adresse>();
+		for (Adresse a : contact.getAdresses()) {
+			adresses.add(a);
+		}
+		return adresses;
+	}
 	
 }
